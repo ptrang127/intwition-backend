@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.send('this is the endpoint to get the analysis');
+  res.send('Intwition Analysis Endpoint');
 });
 
 module.exports = router;
