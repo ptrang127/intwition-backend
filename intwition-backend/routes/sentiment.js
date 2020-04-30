@@ -1,41 +1,34 @@
 var express = require('express');
 var router = express.Router();
-var Twitter = require('twitter');
+var twitter = require('../services/twitter-service');
 var Sentiment = require('sentiment');
+var sentiment = new Sentiment();
 
-const twitter = new Twitter({
-  consumer_key: '',
-  consumer_secret: '',
-  access_token_key: '',
-  access_token_secret: ''
-});
-
-const sentiment = new Sentiment();
 
 /* GET sentiment given a term. */
 router.get('/term/:term', function (req, res, next) {
-  twitter.get('search/tweets', { q: req.params.term, lang: 'en', result_type: 'mixed', count: 100 }, function (error, tweets, response) {
+  twitter.get('search/tweets', { q: req.params.term + " -filter:retweets", lang: 'en', result_type: 'mixed', count: 100, tweet_mode: 'extended' }, function (error, tweets, response) {
 
     let statuses = tweets.statuses;
 
     let tweet_array = statuses.map(tweet => {
-      return tweet.text;
+      return tweet.full_text;
     })
 
     let sentiments = tweet_array.map(tweet => {
       return {
         text: tweet,
         sentiment: sentiment.analyze(tweet)
-      }
+      };
     });
 
     let scores = sentiments.map(sentiment => {
       return sentiment.sentiment.score;
-    })
+    });
 
     let comparatives = sentiments.map(sentiment => {
       return sentiment.sentiment.comparative;
-    })
+    });
 
     const arrSum = arr => arr.reduce((a, b) => a + b, 0);
     const arrAvg = arr => arr.reduce((a, b) => a + b, 0) / arr.length;
@@ -70,6 +63,7 @@ router.get('/term/:term', function (req, res, next) {
     });
 
   });
+
 });
 
 /* GET sentiment given an account. */
@@ -77,7 +71,7 @@ router.get('/account/:account', function (req, res, next) {
   res.send(req.params.account);
 });
 
-/* GET sentiment given an account. */
+/* GET sentiment given a hashtag. */
 router.get('/hashtag', function (req, res, next) {
   res.send(req.params.hashtag);
 });
