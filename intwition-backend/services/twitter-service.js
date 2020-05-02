@@ -1,4 +1,3 @@
-
 var Twitter = require('twitter');
 
 var twitter = new Twitter({

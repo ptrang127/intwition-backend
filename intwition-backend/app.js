@@ -6,7 +6,7 @@ var logger = require('morgan');
 var cors = require('cors')
 
 var indexRouter = require('./routes/index');
-var sentimentRouter = require('./routes/sentiment');
+var analyzeRouter = require('./routes/analyze');
 
 var app = express();
 
@@ -23,7 +23,7 @@ app.use(cors());
 
 // setting up express to use routes
 app.use('/', indexRouter);
-app.use('/sentiment', sentimentRouter);
+app.use('/analyze', analyzeRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
