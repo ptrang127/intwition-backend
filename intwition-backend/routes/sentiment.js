@@ -3,17 +3,17 @@ var router = express.Router();
 var twitter = require('../services/twitter-service');
 var Sentiment = require('sentiment');
 var sentiment = new Sentiment();
+var textService = require('../services/text-service');
+var stopWordService = require('stopword');
 
 
 /* GET sentiment given a term. */
 router.get('/term/:term', function (req, res, next) {
   twitter.get('search/tweets', { q: req.params.term + " -filter:retweets", lang: 'en', result_type: 'mixed', count: 100, tweet_mode: 'extended' }, function (error, tweets, response) {
 
-    let statuses = tweets.statuses;
-
-    let tweet_array = statuses.map(tweet => {
+    let tweet_array = tweets.statuses.map(tweet => {
       return tweet.full_text;
-    })
+    });
 
     let sentiments = tweet_array.map(tweet => {
       return {
@@ -26,7 +26,7 @@ router.get('/term/:term', function (req, res, next) {
       return sentiment.sentiment.score;
     });
 
-    let comparatives = sentiments.map(sentiment => {
+    let comparative_scores = sentiments.map(sentiment => {
       return sentiment.sentiment.comparative;
     });
 
@@ -35,9 +35,8 @@ router.get('/term/:term', function (req, res, next) {
 
     let sum = arrSum(scores);
     let avg = arrAvg(scores);
-
-    let sum_comparative = arrSum(comparatives);
-    let avg_comparative = arrAvg(comparatives);
+    let sum_comparative = arrSum(comparative_scores);
+    let avg_comparative = arrAvg(comparative_scores);
 
     let result = '';
     if (sum_comparative < -4) {
@@ -52,6 +51,10 @@ router.get('/term/:term', function (req, res, next) {
       result = "Very Positive";
     }
 
+    let all_words = tweet_array.join(' ').split(' ');
+    let filtered_words = stopWordService.removeStopwords(all_words);
+    let cloud = textService.countWords(filtered_words, 0);
+
     res.send({
       sum_score: sum,
       avg_score: avg,
@@ -59,7 +62,8 @@ router.get('/term/:term', function (req, res, next) {
       avg_comparative, avg_comparative,
       result: result,
       length: scores.length,
-      tweets: tweet_array
+      tweets: tweet_array,
+      cloud: cloud
     });
 
   });
