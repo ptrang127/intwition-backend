@@ -25,7 +25,7 @@ class CloudService {
 
         // push to payload
         for (var word in count) {
-            if (count[word] > 2) {
+            if (count[word] > 1) {
                 let data = {
                     value: word,
                     count: count[word]
