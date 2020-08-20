@@ -5,8 +5,8 @@ var SentimentService = require('../services/sentiment-service');
 var CloudService = require('../services/cloud-service');
 
 /* GET sentiment given a term. */
-router.get('/term/:term', function(req, res, next) {
-    twitter.get('search/tweets', { q: req.params.term + " -filter:retweets", lang: 'en', count: 100, tweet_mode: 'extended' }, function(error, tweets, response) {
+router.get('/term/:term', function (req, res, next) {
+    twitter.get('search/tweets', { q: req.params.term + " -filter:retweets", lang: 'en', result_type: 'popular', count: 100, tweet_mode: 'extended' }, function (error, tweets, response) {
 
         // get all tweets and store in array
         let tweet_array = tweets.statuses.map(tweet => {
@@ -19,8 +19,7 @@ router.get('/term/:term', function(req, res, next) {
         res.send({
             sentiment: sentiment_result,
             cloud: cloud_result,
-            tweets: tweet_array,
-            actual_tweets: tweets
+            tweets: tweets
         });
 
     });
@@ -28,12 +27,12 @@ router.get('/term/:term', function(req, res, next) {
 });
 
 /* GET sentiment given an account. */
-router.get('/account/:account', function(req, res, next) {
+router.get('/account/:account', function (req, res, next) {
     res.send(req.params.account);
 });
 
 /* GET sentiment given a hashtag. */
-router.get('/hashtag', function(req, res, next) {
+router.get('/hashtag', function (req, res, next) {
     res.send(req.params.hashtag);
 });
 
