@@ -6,7 +6,7 @@ var CloudService = require('../services/cloud-service');
 
 /* GET sentiment given a term. */
 router.get('/term/:term', function (req, res, next) {
-    twitter.get('search/tweets', { q: req.params.term + " -filter:retweets", lang: 'en', result_type: 'popular', count: 100, tweet_mode: 'extended' }, function (error, tweets, response) {
+    twitter.get('search/tweets', { q: req.params.term + " -filter:retweets", lang: 'en', result_type: 'mixed', count: 100, tweet_mode: 'extended' }, function (error, tweets, response) {
 
         // get all tweets and store in array
         let tweet_array = tweets.statuses.map(tweet => {
