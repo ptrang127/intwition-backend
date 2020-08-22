@@ -56,7 +56,7 @@ class SentimentService {
         let difference = Math.abs(positive_count - negative_count);
         let overall_sentiment = "The overall sentiment for the given query is " + result + ". ";
         let certainty = "The strength and certainty of this sentiment is " + (Math.abs(sum_score) > 100 ? "strong. " : "weak. ");
-        let comparison = "There were " + difference + (positive_count - negative_count > 0 ? Math.abs(positive_count - negative_count) + " more positive words than negative words." : " more negative words than positive words.");
+        let comparison = "There were " + difference + (positive_count - negative_count > 0 ? " more positive words than negative words." : " more negative words than positive words.");
 
         let summary = "";
         summary = summary.concat(overall_sentiment, certainty, comparison);
@@ -70,8 +70,6 @@ class SentimentService {
             result: result,
             summary: summary
         }
-
-        console.log(payload);
 
         return payload
     }
