@@ -3,7 +3,7 @@ const googleClient = new language.LanguageServiceClient();
 
 function trimContent(content) {
     console.log('Trimming tweets');
-    if (content.length > 1000) {
+    if (content.length > 1000000) { // not going to reach this. change for NLP api billing
         content = content.slice(0, 999);
     }
     console.log('Number of NLP documents: ' + Math.ceil(content.length / 1000));
