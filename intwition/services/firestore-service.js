@@ -25,9 +25,7 @@ async function addQuery(query, sentiment) {
     await docRef.set({
         query: query,
         sentiment: sentiment,
-        timestamp: admin.firestore.Timestamp.now(),
-        test: "hello"
-
+        timestamp: admin.firestore.Timestamp.now()
     });
     console.log('Document added');
 }
@@ -38,8 +36,7 @@ async function updateQuery(query, sentiment) {
     await docRef.update({
         query: query,
         sentiment: sentiment,
-        timestamp: admin.firestore.Timestamp.now(),
-        test: "hello"
+        timestamp: admin.firestore.Timestamp.now()
     });
     console.log('Document updated');
 }
